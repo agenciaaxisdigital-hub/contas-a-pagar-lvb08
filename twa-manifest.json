@@ -1,0 +1,16 @@
+﻿{
+  "packageId": "br.com.sarelli.contas",
+  "host": "financeiro.sarelli.com.br",
+  "name": "Financeiro Sarelli",
+  "launcherName": "Contas",
+  "themeColor": "#ec4899",
+  "navigationColor": "#070510",
+  "backgroundColor": "#070510",
+  "enableNotifications": true,
+  "startUrl": "/",
+  "iconUrl": "https://financeiro.sarelli.com.br/icon-512.png",
+  "maskableIconUrl": "https://financeiro.sarelli.com.br/icon-512.png",
+  "appVersionName": "1.0.0",
+  "appVersionCode": 1,
+  "fallbackType": "customtabs"
+}
