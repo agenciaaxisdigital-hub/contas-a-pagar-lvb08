@@ -59,7 +59,7 @@ Deno.serve(async (req) => {
     const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.createUser({
       email,
       password: senha,
-      email_confirm: false,
+      email_confirm: true,
     });
 
     if (authError) {
@@ -76,7 +76,7 @@ Deno.serve(async (req) => {
       .insert({
         auth_user_id: authUser.user.id,
         nome,
-        tipo: tipo || 'lancador',
+        tipo: tipo || 'usuario',
       })
       .select()
       .single();
