@@ -7,7 +7,7 @@ import { useEmpresa } from '@/contexts/EmpresaContext';
 import { toast } from 'sonner';
 import {
   ArrowLeft, Check, X, CreditCard, Paperclip, History,
-  Download, RefreshCw, User, Pencil, Save, Eye, Upload, FileText, Maximize2, Camera, ImageIcon
+  Download, RefreshCw, User, Pencil, Save, Eye, Upload, FileText, Maximize2, Camera, ImageIcon, PenLine
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,6 +20,7 @@ import AppLayout from '@/components/AppLayout';
 import UserSelect from '@/components/UserSelect';
 import FileUpload from '@/components/FileUpload';
 import { gerarPdfConta } from '@/lib/gerarPdfConta';
+import { gerarReciboAssinatura } from '@/lib/gerarReciboAssinatura';
 
 
 
@@ -280,6 +281,22 @@ export default function ContaDetalhePage() {
       criado_em: conta.criado_em, observacoes: conta.observacoes,
       criado_por_nome: getNome(conta.criado_por) ?? undefined,
       aprovado_por_nome: getNome(conta.aprovado_por) ?? undefined,
+      pago_por_nome: getNome(conta.pago_por) ?? undefined,
+    });
+  };
+
+  const handleGerarRecibo = () => {
+    if (!conta) return;
+    gerarReciboAssinatura({
+      descricao: conta.descricao,
+      valor: Number(conta.valor),
+      categoria: conta.categoria,
+      motivo: conta.motivo,
+      data_pagamento: conta.data_pagamento,
+      forma_pagamento: conta.forma_pagamento,
+      chave_pix: conta.chave_pix,
+      observacoes: conta.observacoes,
+      empresa_nome: empresaAtiva?.nome,
       pago_por_nome: getNome(conta.pago_por) ?? undefined,
     });
   };
@@ -712,14 +729,22 @@ export default function ContaDetalhePage() {
           </div>
         )}
 
-        {/* PDF */}
+        {/* PDF + Recibo */}
         {(conta.status === 'Paga' || conta.status === 'Aprovada') && (
-          <button
-            onClick={handleGerarPdf}
-            className="w-full h-12 rounded-xl border border-border bg-card flex items-center justify-center gap-2 text-sm font-medium shadow-sm active:scale-[0.98] transition-transform"
-          >
-            <Download size={16} /> Baixar documento (PDF)
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={handleGerarPdf}
+              className="flex-1 h-12 rounded-xl border border-border bg-card flex items-center justify-center gap-2 text-sm font-medium shadow-sm active:scale-[0.98] transition-transform"
+            >
+              <Download size={16} /> PDF
+            </button>
+            <button
+              onClick={handleGerarRecibo}
+              className="flex-1 h-12 rounded-xl border border-primary/30 bg-primary/5 text-primary flex items-center justify-center gap-2 text-sm font-medium shadow-sm active:scale-[0.98] transition-transform hover:bg-primary/10"
+            >
+              <PenLine size={16} /> Recibo c/ Assinatura
+            </button>
+          </div>
         )}
 
         {/* ═══════ SEÇÃO 2: REGISTRAR PAGAMENTO (admin) ═══════ */}
