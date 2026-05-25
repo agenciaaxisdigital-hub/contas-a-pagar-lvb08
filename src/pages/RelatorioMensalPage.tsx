@@ -186,8 +186,8 @@ export default function RelatorioMensalPage() {
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap');
     * { margin:0; padding:0; box-sizing:border-box; }
     body { font-family:'Outfit',sans-serif; color:#1a1a2e; padding:32px; max-width:900px; margin:0 auto; }
-    .header { display:flex; align-items:center; gap:12px; margin-bottom:28px; padding-bottom:16px; border-bottom:3px solid #ec4899; }
-    .logo { width:44px; height:44px; border-radius:50%; background:linear-gradient(135deg,#ec4899,#fb7185); display:flex; align-items:center; justify-content:center; color:white; font-weight:700; font-size:15px; }
+    .header { display:flex; align-items:center; gap:12px; margin-bottom:28px; padding-bottom:16px; border-bottom:3px solid #3A3D42; }
+    .logo { width:44px; height:44px; border-radius:50%; background:linear-gradient(135deg,#3A3D42,#6B7280); display:flex; align-items:center; justify-content:center; color:white; font-weight:700; font-size:15px; }
     .title { font-size:20px; font-weight:700; margin-bottom:4px; }
     .subtitle { font-size:12px; color:#888; }
     .kpis { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:24px; }
@@ -196,7 +196,7 @@ export default function RelatorioMensalPage() {
     .kpi-value { font-size:22px; font-weight:700; }
     .kpi-value.pago { color:#16a34a; }
     .kpi-value.pendente { color:#d97706; }
-    .section-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:#ec4899; margin-bottom:10px; margin-top:24px; }
+    .section-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:#3A3D42; margin-bottom:10px; margin-top:24px; }
     table { width:100%; border-collapse:collapse; font-size:12px; }
     th { text-align:left; font-size:10px; text-transform:uppercase; letter-spacing:1px; color:#999; padding:6px 8px; border-bottom:2px solid #f0f0f0; }
     td { padding:7px 8px; border-bottom:1px solid #f8f8f8; vertical-align:middle; }
@@ -206,7 +206,7 @@ export default function RelatorioMensalPage() {
 </head>
 <body>
   <div class="header">
-    <div class="logo">FS</div>
+    <div class="logo">AX</div>
     <div>
       <div class="title">Relatório Mensal — ${mesLabel.charAt(0).toUpperCase() + mesLabel.slice(1)}</div>
       <div class="subtitle">Agência Axis Digital · Contas a Pagar · Gerado em ${format(new Date(), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}</div>

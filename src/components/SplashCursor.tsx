@@ -868,16 +868,16 @@ export default function SplashCursor({
       return delta;
     }
 
-    // Pink/rose palette matching the design system (hsl 340 82% 55%)
+    // Charcoal/silver palette matching Axis identity
     const pinkPalette = [
-      { r: 0.925, g: 0.282, b: 0.6 },   // #ec4899 — pink-500
-      { r: 0.976, g: 0.659, b: 0.831 },  // #f9a8d4 — pink-300
-      { r: 0.745, g: 0.094, b: 0.365 },  // #be185d — pink-700
-      { r: 0.992, g: 0.643, b: 0.686 },  // #fda4af — rose-300
-      { r: 0.957, g: 0.247, b: 0.369 },  // #f43f5e — rose-500
-      { r: 0.753, g: 0.149, b: 0.827 },  // #c026d3 — fuchsia-600
-      { r: 0.910, g: 0.475, b: 0.976 },  // #e879f9 — fuchsia-400
-      { r: 0.800, g: 0.200, b: 0.450 },  // deep rose
+      { r: 0.227, g: 0.239, b: 0.259 },  // #3A3D42 — charcoal
+      { r: 0.420, g: 0.447, b: 0.502 },  // #6B7280 — gray-500
+      { r: 0.612, g: 0.639, b: 0.686 },  // #9CA3AF — gray-400
+      { r: 0.322, g: 0.349, b: 0.388 },  // #525866 — mid charcoal
+      { r: 0.541, g: 0.561, b: 0.600 },  // #8A8F98 — accent silver
+      { r: 0.173, g: 0.184, b: 0.204 },  // #2C2F34 — deep charcoal
+      { r: 0.722, g: 0.737, b: 0.761 },  // #B8BCC2 — light silver
+      { r: 0.369, g: 0.392, b: 0.431 },  // #5E646E — slate
     ];
 
     function generateColor() {

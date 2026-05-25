@@ -58,7 +58,7 @@ export function NovaEmpresaDialog({ children }: Props) {
               id="nome"
               value={nome}
               onChange={(e) => setNome(e.target.value)}
-              placeholder="Ex: Sarelli Consultoria"
+              placeholder="Ex: Axis Consultoria"
               required
             />
           </div>

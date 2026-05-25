@@ -17,7 +17,7 @@ import {
 import AppLayout from '@/components/AppLayout';
 import { cn } from '@/lib/utils';
 
-const CORES = ['#ec4899', '#f43f5e', '#a855f7', '#3b82f6', '#10b981', '#f59e0b', '#6366f1', '#14b8a6'];
+const CORES = ['#3A3D42', '#6B7280', '#4B5563', '#374151', '#1F2937', '#9CA3AF', '#6366f1', '#14b8a6'];
 
 interface ContaRaw {
   id: string;

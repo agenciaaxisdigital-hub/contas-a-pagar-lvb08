@@ -72,17 +72,17 @@ export function gerarPdfConta(conta: ContaData) {
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap');
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Outfit', sans-serif; color: #1a1a2e; padding: 40px; max-width: 800px; margin: 0 auto; }
-    .header { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; padding-bottom: 16px; border-bottom: 3px solid #ec4899; }
-    .logo { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #ec4899, #fb7185); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 16px; }
+    .header { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; padding-bottom: 16px; border-bottom: 3px solid #3A3D42; }
+    .logo { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #3A3D42, #6B7280); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 16px; }
     .header-text h1 { font-size: 18px; font-weight: 700; }
     .header-text p { font-size: 12px; color: #666; }
     .title { font-size: 22px; font-weight: 700; margin-bottom: 24px; }
     .section { margin-bottom: 20px; }
-    .section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #ec4899; margin-bottom: 12px; }
+    .section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #3A3D42; margin-bottom: 12px; }
     .row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
     .row-label { color: #666; font-size: 14px; }
     .row-value { font-weight: 600; font-size: 14px; text-align: right; max-width: 60%; }
-    .valor-destaque { font-size: 28px; font-weight: 700; color: #ec4899; margin-bottom: 24px; }
+    .valor-destaque { font-size: 28px; font-weight: 700; color: #3A3D42; margin-bottom: 24px; }
     ${conta.comprovante_url ? `.comprovante { margin-top: 20px; } .comprovante img { max-width: 100%; max-height: 400px; border-radius: 12px; border: 1px solid #eee; }` : ''}
     .footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #eee; text-align: center; font-size: 11px; color: #999; }
     @media print { body { padding: 20px; } }
@@ -116,7 +116,7 @@ export function gerarPdfConta(conta: ContaData) {
     <div class="comprovante">
       ${conta.comprovante_url.match(/\.(jpg|jpeg|png|webp|gif)$/i) 
         ? `<img src="${conta.comprovante_url}" alt="Comprovante" />`
-        : `<a href="${conta.comprovante_url}" target="_blank" style="color: #ec4899;">Abrir comprovante →</a>`
+        : `<a href="${conta.comprovante_url}" target="_blank" style="color: #3A3D42;">Abrir comprovante →</a>`
       }
     </div>
   </div>

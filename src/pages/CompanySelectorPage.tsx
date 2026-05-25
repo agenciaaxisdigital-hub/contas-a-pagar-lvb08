@@ -32,11 +32,11 @@ export default function CompanySelectorPage() {
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-8">
       <div className="mb-8 text-center">
-        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-rose-400 flex items-center justify-center mx-auto mb-4 shadow-lg">
+        <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg" style={{ background: 'linear-gradient(135deg, #3A3D42 0%, #6B7280 100%)' }}>
           <Building2 className="w-8 h-8 text-white" />
         </div>
         <h1 className="text-2xl font-bold text-foreground">Selecione uma empresa</h1>
-        <p className="text-sm text-muted-foreground mt-1">Holding Sarelli</p>
+        <p className="text-sm text-muted-foreground mt-1">Agência Axis Digital</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full max-w-3xl">
