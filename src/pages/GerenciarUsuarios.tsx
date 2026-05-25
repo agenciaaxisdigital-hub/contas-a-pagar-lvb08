@@ -28,14 +28,14 @@ export default function GerenciarUsuarios() {
   // Create form
   const [nome, setNome] = useState('');
   const [senha, setSenha] = useState('');
-  const [tipo, setTipo] = useState<'usuario' | 'admin'>('usuario');
+  const [tipo, setTipo] = useState<'agente' | 'admin'>('agente');
   const [showSenha, setShowSenha] = useState(false);
   const [saving, setSaving] = useState(false);
 
   // Edit state
   const [editingUser, setEditingUser] = useState<Usuario | null>(null);
   const [editNome, setEditNome] = useState('');
-  const [editTipo, setEditTipo] = useState<'usuario' | 'admin'>('usuario');
+  const [editTipo, setEditTipo] = useState<'agente' | 'admin'>('agente');
   const [editSenha, setEditSenha] = useState('');
   const [showEditSenha, setShowEditSenha] = useState(false);
   const [editSaving, setEditSaving] = useState(false);
@@ -73,7 +73,7 @@ export default function GerenciarUsuarios() {
 
     setSaving(true);
     try {
-      const res = await supabase.functions.invoke('criar-usuario', {
+      const res = await supabase.functions.invoke('contas-criar-usuario', {
         body: { nome: nome.trim(), senha, tipo },
       });
 
@@ -84,7 +84,7 @@ export default function GerenciarUsuarios() {
       toast.success(`✓ Usuário "${nome}" criado com sucesso!`);
       setNome('');
       setSenha('');
-      setTipo('usuario');
+      setTipo('agente');
       setShowForm(false);
       fetchUsuarios();
     } catch (err: any) {
@@ -97,7 +97,7 @@ export default function GerenciarUsuarios() {
   const openEdit = (u: Usuario) => {
     setEditingUser(u);
     setEditNome(u.nome);
-    setEditTipo(u.tipo as 'usuario' | 'admin');
+    setEditTipo(u.tipo as 'agente' | 'admin');
     setEditSenha('');
     setShowResetSenha(false);
     setShowEditSenha(false);
@@ -106,7 +106,7 @@ export default function GerenciarUsuarios() {
   const closeEdit = () => {
     setEditingUser(null);
     setEditNome('');
-    setEditTipo('usuario');
+    setEditTipo('agente');
     setEditSenha('');
     setShowResetSenha(false);
   };
@@ -125,7 +125,7 @@ export default function GerenciarUsuarios() {
 
     setEditSaving(true);
     try {
-      const res = await supabase.functions.invoke('gerenciar-usuario', {
+      const res = await supabase.functions.invoke('contas-gerenciar-usuario', {
         body: {
           action: 'edit',
           usuario_id: editingUser.id,
@@ -153,7 +153,7 @@ export default function GerenciarUsuarios() {
     if (!deletingUser) return;
     setDeleting(true);
     try {
-      const res = await supabase.functions.invoke('gerenciar-usuario', {
+      const res = await supabase.functions.invoke('contas-gerenciar-usuario', {
         body: { action: 'delete', usuario_id: deletingUser.id },
       });
 
@@ -259,10 +259,10 @@ export default function GerenciarUsuarios() {
               <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
-                  onClick={() => setTipo('usuario')}
+                  onClick={() => setTipo('agente')}
                   className={cn(
                     'h-12 rounded-xl border-2 text-sm font-semibold transition-all',
-                    tipo === 'usuario'
+                    tipo === 'agente'
                       ? 'border-primary bg-primary/5 text-primary'
                       : 'border-border text-muted-foreground'
                   )}
@@ -331,10 +331,10 @@ export default function GerenciarUsuarios() {
               <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
-                  onClick={() => setEditTipo('usuario')}
+                  onClick={() => setEditTipo('agente')}
                   className={cn(
                     'h-12 rounded-xl border-2 text-sm font-semibold transition-all',
-                    editTipo === 'usuario'
+                    editTipo === 'agente'
                       ? 'border-primary bg-primary/5 text-primary'
                       : 'border-border text-muted-foreground'
                   )}
