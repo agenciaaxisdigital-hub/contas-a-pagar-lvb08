@@ -11,14 +11,15 @@ interface ReciboData {
   motivo: string;
   observacoes?: string | null;
   empresa_nome?: string;
+  empresa_logo_url?: string | null;
   pago_por_nome?: string;
+  documento_recebedor?: string | null;
 }
 
 const fmt = (v: number) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);
 
 const fmtData = (d: string | null | undefined) => {
-  // Se não tem data de pagamento, usa hoje (recibo gerado antes do pagamento)
   const dt = d
     ? (d.includes('T') ? new Date(d) : new Date(d + 'T00:00:00'))
     : new Date();
@@ -72,9 +73,14 @@ function valorExtenso(valor: number): string {
 
 export function gerarReciboAssinatura(data: ReciboData) {
   const agora = format(new Date(), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR });
-  const dataRecibo = fmtData(data.data_pagamento); // hoje se ainda não pago
+  const dataRecibo = fmtData(data.data_pagamento);
   const extenso = valorExtenso(data.valor);
   const empresaNome = data.empresa_nome ?? 'Agência Axis Digital';
+  const docRecebedor = data.documento_recebedor ?? '';
+
+  const logoHtml = data.empresa_logo_url
+    ? `<img src="${data.empresa_logo_url}" alt="${empresaNome}" style="height:52px;width:auto;max-width:130px;object-fit:contain;border-radius:6px;" crossorigin="anonymous" />`
+    : `<div class="logo-initials">${empresaNome.slice(0, 2).toUpperCase()}</div>`;
 
   const html = `
 <!DOCTYPE html>
@@ -83,17 +89,17 @@ export function gerarReciboAssinatura(data: ReciboData) {
   <meta charset="utf-8">
   <title>Recibo — ${data.descricao}</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap');
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Outfit', sans-serif; color: #1a1a2e; background: #fff; }
 
     .page { padding: 36px 48px; max-width: 760px; margin: 0 auto; }
 
     /* Header */
-    .header { display: flex; align-items: center; gap: 14px; padding-bottom: 18px; border-bottom: 3px solid #3A3D42; margin-bottom: 22px; }
-    .logo { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #3A3D42, #6B7280); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 14px; letter-spacing: 1px; flex-shrink: 0; }
+    .header { display: flex; align-items: center; gap: 16px; padding-bottom: 18px; border-bottom: 3px solid #3A3D42; margin-bottom: 22px; }
+    .logo-initials { width: 52px; height: 52px; border-radius: 10px; background: linear-gradient(135deg, #3A3D42, #6B7280); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 15px; letter-spacing: 1px; flex-shrink: 0; }
     .header-text h1 { font-size: 17px; font-weight: 700; color: #1a1a2e; }
-    .header-text p { font-size: 11px; color: #6B7280; margin-top: 1px; }
+    .header-text p { font-size: 11px; color: #6B7280; margin-top: 2px; }
     .recibo-title { margin-left: auto; text-align: right; }
     .recibo-title h2 { font-size: 20px; font-weight: 800; color: #3A3D42; letter-spacing: 1px; text-transform: uppercase; }
     .recibo-title p { font-size: 10px; color: #9CA3AF; margin-top: 2px; }
@@ -114,15 +120,18 @@ export function gerarReciboAssinatura(data: ReciboData) {
     .declaracao { background: #F9FAFB; border-radius: 8px; padding: 14px 16px; font-size: 12.5px; line-height: 1.65; color: #374151; margin-bottom: 28px; border-left: 4px solid #3A3D42; }
     .declaracao strong { color: #1a1a2e; }
 
-    /* Assinatura */
-    .assinatura-box { border: 1.5px dashed #CBD5E1; border-radius: 12px; padding: 24px 28px; margin-bottom: 20px; }
-    .assinatura-titulo { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #6B7280; margin-bottom: 20px; text-align: center; }
-    .assinatura-linha { border-bottom: 1.5px solid #1a1a2e; margin-bottom: 6px; height: 40px; }
-    .assinatura-campo-label { font-size: 10px; color: #9CA3AF; margin-bottom: 18px; }
-    .campos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 8px; }
-    .campo { flex: 1; }
-    .campo-linha { border-bottom: 1.5px solid #6B7280; height: 28px; margin-bottom: 4px; }
-    .campo-label { font-size: 10px; color: #9CA3AF; }
+    /* Área de assinatura — preencher à mão no papel */
+    .assinatura-box { border: 1.5px dashed #CBD5E1; border-radius: 12px; padding: 28px 28px 22px; margin-bottom: 20px; }
+    .assinatura-titulo { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #6B7280; margin-bottom: 26px; text-align: center; }
+
+    .campo-bloco { margin-bottom: 22px; }
+    .campo-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #9CA3AF; margin-bottom: 8px; }
+    .campo-linha-nome { border-bottom: 1.5px solid #374151; height: 36px; width: 100%; }
+    .campo-linha-assinatura { border-bottom: 1.5px solid #374151; height: 72px; width: 100%; }
+    .campo-valor-preenchido { height: 36px; display: flex; align-items: flex-end; padding-bottom: 3px; font-size: 13px; font-weight: 600; color: #1a1a2e; border-bottom: 1.5px solid #374151; }
+
+    .campos-row { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+    .campo-linha-pequena { border-bottom: 1.5px solid #9CA3AF; height: 30px; width: 100%; }
 
     /* Footer */
     .footer { text-align: center; font-size: 10px; color: #CBD5E1; padding-top: 16px; border-top: 1px solid #F3F4F6; }
@@ -137,9 +146,9 @@ export function gerarReciboAssinatura(data: ReciboData) {
 <body>
   <div class="page">
 
-    <!-- Header -->
+    <!-- Header com logo da empresa -->
     <div class="header">
-      <div class="logo">AX</div>
+      <div style="flex-shrink:0;display:flex;align-items:center;">${logoHtml}</div>
       <div class="header-text">
         <h1>${empresaNome}</h1>
         <p>Controle Financeiro</p>
@@ -205,31 +214,43 @@ export function gerarReciboAssinatura(data: ReciboData) {
       (${extenso}), referente a <strong>${data.descricao}</strong>${data.motivo && data.motivo !== data.descricao ? ` — ${data.motivo}` : ''},
       ${data.forma_pagamento ? `pago via <strong>${data.forma_pagamento}</strong>${data.chave_pix ? ` (${data.chave_pix})` : ''},` : ''}
       dando plena e total quitação pelo valor acima recebido.
+      ${docRecebedor ? `<br><br>Recebedor identificado por CPF/CNPJ: <strong>${docRecebedor}</strong>.` : ''}
     </div>
 
-    <!-- Campo de assinatura do recebedor -->
+    <!-- Campo de assinatura — preencher à mão no papel impresso -->
     <div class="assinatura-box">
       <div class="assinatura-titulo">✍ Assinatura do Recebedor</div>
 
-      <div class="assinatura-linha"></div>
-      <div class="assinatura-campo-label">Assinatura</div>
+      <!-- Nome do recebedor -->
+      <div class="campo-bloco">
+        <div class="campo-label">Nome completo do recebedor</div>
+        <div class="campo-linha-nome"></div>
+      </div>
 
-      <div class="campos-grid">
-        <div class="campo">
-          <div class="campo-linha"></div>
-          <div class="campo-label">Nome completo</div>
-        </div>
-        <div class="campo">
-          <div class="campo-linha"></div>
-          <div class="campo-label">CPF / RG</div>
-        </div>
-        <div class="campo">
-          <div class="campo-linha"></div>
+      <!-- CPF / CNPJ -->
+      <div class="campo-bloco">
+        <div class="campo-label">CPF / CNPJ</div>
+        ${docRecebedor
+          ? `<div class="campo-valor-preenchido">${docRecebedor}</div>`
+          : `<div class="campo-linha-nome"></div>`
+        }
+      </div>
+
+      <!-- Assinatura — espaço maior para assinar à caneta -->
+      <div class="campo-bloco">
+        <div class="campo-label">Assinatura</div>
+        <div class="campo-linha-assinatura"></div>
+      </div>
+
+      <!-- Data e contato -->
+      <div class="campos-row">
+        <div>
           <div class="campo-label">Data de recebimento</div>
+          <div class="campo-linha-pequena"></div>
         </div>
-        <div class="campo">
-          <div class="campo-linha"></div>
+        <div>
           <div class="campo-label">Telefone / Contato</div>
+          <div class="campo-linha-pequena"></div>
         </div>
       </div>
     </div>
@@ -239,13 +260,30 @@ export function gerarReciboAssinatura(data: ReciboData) {
     </div>
 
   </div>
-  <script>window.onload = () => window.print();</script>
 </body>
 </html>`;
 
-  const printWindow = window.open('', '_blank');
-  if (printWindow) {
-    printWindow.document.write(html);
-    printWindow.document.close();
-  }
+  // Usa iframe oculto para evitar popup blocker
+  const iframe = document.createElement('iframe');
+  iframe.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;border:none;';
+  document.body.appendChild(iframe);
+  const doc = iframe.contentDocument || iframe.contentWindow?.document;
+  if (!doc) { document.body.removeChild(iframe); return; }
+  doc.open();
+  doc.write(html);
+  doc.close();
+  // Aguarda imagens carregarem antes de imprimir
+  iframe.contentWindow!.onload = () => {
+    iframe.contentWindow!.focus();
+    iframe.contentWindow!.print();
+    setTimeout(() => { document.body.removeChild(iframe); }, 3000);
+  };
+  // Fallback se onload não disparar (doc.write já concluído)
+  setTimeout(() => {
+    if (iframe.isConnected) {
+      iframe.contentWindow?.focus();
+      iframe.contentWindow?.print();
+      setTimeout(() => { if (iframe.isConnected) document.body.removeChild(iframe); }, 3000);
+    }
+  }, 800);
 }

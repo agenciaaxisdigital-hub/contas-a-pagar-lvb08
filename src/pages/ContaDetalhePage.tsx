@@ -76,6 +76,10 @@ export default function ContaDetalhePage() {
   const [usuarios, setUsuarios] = useState<UsuarioSimples[]>([]);
   const viewerBlobRef = useRef<string | null>(null);
 
+  // Recibo — modal de CPF/CNPJ
+  const [reciboModalOpen, setReciboModalOpen] = useState(false);
+  const [reciboCpf, setReciboCpf] = useState('');
+
   // [FEATURE 4] Aviso de comprovante antes de confirmar pagamento
   const [avisoSemComprovante, setAvisoSemComprovante] = useState(false);
 
@@ -287,6 +291,13 @@ export default function ContaDetalhePage() {
 
   const handleGerarRecibo = () => {
     if (!conta) return;
+    setReciboCpf('');
+    setReciboModalOpen(true);
+  };
+
+  const confirmarGerarRecibo = () => {
+    if (!conta) return;
+    setReciboModalOpen(false);
     gerarReciboAssinatura({
       descricao: conta.descricao,
       valor: Number(conta.valor),
@@ -297,7 +308,9 @@ export default function ContaDetalhePage() {
       chave_pix: conta.chave_pix,
       observacoes: conta.observacoes,
       empresa_nome: empresaAtiva?.nome,
+      empresa_logo_url: empresaAtiva?.logo_url ?? null,
       pago_por_nome: getNome(conta.pago_por) ?? undefined,
+      documento_recebedor: reciboCpf.trim() || null,
     });
   };
 
@@ -739,6 +752,14 @@ export default function ContaDetalhePage() {
           </div>
         )}
 
+        {/* Recibo para Assinatura — disponível em qualquer status para todos */}
+        <button
+          onClick={handleGerarRecibo}
+          className="w-full h-12 rounded-xl border border-primary/30 bg-primary/5 text-primary flex items-center justify-center gap-2 text-sm font-medium shadow-sm active:scale-[0.98] transition-transform hover:bg-primary/10"
+        >
+          <PenLine size={16} /> Gerar Recibo para Assinatura
+        </button>
+
         {/* PDF resumo — só quando já paga/aprovada */}
         {(conta.status === 'Paga' || conta.status === 'Aprovada') && (
           <button
@@ -1083,6 +1104,30 @@ export default function ContaDetalhePage() {
                 </div>
               )
             ) : null}
+          </div>
+        </div>
+      )}
+
+      {/* ═══════ MODAL: CPF/CNPJ DO RECEBEDOR ═══════ */}
+      {reciboModalOpen && (
+        <div className="fixed inset-0 z-[70] bg-black/60 flex items-center justify-center p-4" onClick={() => setReciboModalOpen(false)}>
+          <div className="bg-card rounded-2xl p-6 w-full max-w-sm space-y-4 shadow-xl" onClick={e => e.stopPropagation()}>
+            <h3 className="font-semibold text-base">Recibo para Assinatura</h3>
+            <p className="text-sm text-muted-foreground">CPF ou CNPJ do recebedor (opcional — torna o recibo válido):</p>
+            <Input
+              placeholder="Ex.: 123.456.789-00 ou 12.345.678/0001-00"
+              value={reciboCpf}
+              onChange={e => setReciboCpf(e.target.value)}
+              autoFocus
+              onKeyDown={e => { if (e.key === 'Enter') confirmarGerarRecibo(); }}
+              className="form-input"
+            />
+            <div className="flex gap-2">
+              <Button variant="outline" className="flex-1 rounded-xl" onClick={() => setReciboModalOpen(false)}>Cancelar</Button>
+              <Button className="flex-1 rounded-xl gradient-primary text-primary-foreground" onClick={confirmarGerarRecibo}>
+                <PenLine size={15} className="mr-1.5" /> Gerar Recibo
+              </Button>
+            </div>
           </div>
         </div>
       )}
