@@ -42,6 +42,7 @@ export interface LocalConta {
   pago_por: string | null;
   criado_em: string;
   atualizado_em: string;
+  empresa_id: string | null;
   // Offline metadata
   _syncStatus: 'synced' | 'pending' | 'error';
   _monthKey: string; // 'YYYY-MM' for indexing
@@ -117,6 +118,15 @@ export class OfflineSyncDB extends Dexie {
           // Will be cleaned up
         }
       });
+    });
+
+    // Version 3: add empresa_id index to contas
+    this.version(3).stores({
+      syncQueue: '++id, operationId, table, action, status, timestamp',
+      contas: 'id, _monthKey, _syncStatus, criado_por, status, data_vencimento, empresa_id',
+      usuarios: 'id, auth_user_id',
+      attachments: 'id, contaId, uploaded',
+      syncMeta: 'key'
     });
   }
 }

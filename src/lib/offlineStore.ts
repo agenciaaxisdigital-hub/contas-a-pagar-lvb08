@@ -18,7 +18,7 @@ export function getMonthKey(date: Date): string {
 // ============================
 
 /** Fetch contas for a month from Supabase and cache locally */
-export async function fetchAndCacheContas(month: Date): Promise<LocalConta[]> {
+export async function fetchAndCacheContas(month: Date, empresaId: string): Promise<LocalConta[]> {
   const inicio = format(startOfMonth(month), 'yyyy-MM-dd');
   const fim = format(endOfMonth(month), 'yyyy-MM-dd');
   const monthKey = getMonthKey(month);
@@ -28,6 +28,7 @@ export async function fetchAndCacheContas(month: Date): Promise<LocalConta[]> {
     .select('*')
     .gte('data_vencimento', inicio)
     .lte('data_vencimento', fim)
+    .eq('empresa_id', empresaId)
     .order('data_vencimento', { ascending: true });
 
   if (error) throw error;
@@ -55,6 +56,7 @@ export async function fetchAndCacheContas(month: Date): Promise<LocalConta[]> {
     pago_por: c.pago_por,
     criado_em: c.criado_em,
     atualizado_em: c.atualizado_em,
+    empresa_id: c.empresa_id ?? null,
     _syncStatus: 'synced' as const,
     _monthKey: monthKey,
     _lastFetched: now,
@@ -93,9 +95,11 @@ export async function fetchAndCacheContas(month: Date): Promise<LocalConta[]> {
 }
 
 /** Get contas from local cache only */
-export async function getLocalContas(month: Date): Promise<LocalConta[]> {
+export async function getLocalContas(month: Date, empresaId?: string): Promise<LocalConta[]> {
   const monthKey = getMonthKey(month);
-  return db.contas.where('_monthKey').equals(monthKey).toArray();
+  const all = await db.contas.where('_monthKey').equals(monthKey).toArray();
+  if (!empresaId) return all;
+  return all.filter(c => c.empresa_id === empresaId);
 }
 
 /** Get a single conta from local cache */
