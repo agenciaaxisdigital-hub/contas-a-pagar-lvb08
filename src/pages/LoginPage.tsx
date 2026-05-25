@@ -193,12 +193,26 @@ export default function LoginPage() {
       <div className="w-full max-w-md relative z-10 px-4 py-8 sm:py-0">
         {/* Identity */}
         <div className="flex flex-col items-center mb-7">
-          <img
-            src={logoAxis}
-            alt="Agência Axis"
-            className="mb-1 drop-shadow-2xl"
-            style={{ width: 'clamp(90px, 24vw, 130px)', height: 'clamp(90px, 24vw, 130px)', objectFit: 'contain' }}
-          />
+          {/* Logo com anel metálico */}
+          <div
+            className="mb-4 shrink-0"
+            style={{
+              width: 'clamp(96px, 26vw, 128px)',
+              height: 'clamp(96px, 26vw, 128px)',
+              borderRadius: '50%',
+              padding: '3px',
+              background: 'linear-gradient(135deg, #9CA3AF 0%, #4B5563 50%, #9CA3AF 100%)',
+              boxShadow: '0 0 0 1px rgba(156,163,175,0.15), 0 12px 40px rgba(0,0,0,0.5)',
+            }}
+          >
+            <div style={{ borderRadius: '50%', overflow: 'hidden', width: '100%', height: '100%', background: '#fff' }}>
+              <img
+                src={logoAxis}
+                alt="Agência Axis"
+                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+              />
+            </div>
+          </div>
 
           <p
             className="font-bold tracking-widest uppercase text-[13px]"
