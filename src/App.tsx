@@ -18,7 +18,6 @@ import NotFound from "./pages/NotFound";
 import FuncionariosPage from "./pages/rh/FuncionariosPage";
 import NovoFuncionarioPage from "./pages/rh/NovoFuncionarioPage";
 import FuncionarioDetalhePage from "./pages/rh/FuncionarioDetalhePage";
-import VersionMonitor from "./components/VersionMonitor";
 import InstallPWA from "./components/InstallPWA";
 import { useOfflineSync } from "./hooks/useOfflineSync";
 
@@ -74,7 +73,6 @@ const App = () => (
     <TooltipProvider>
       <GlobalOfflineSync />
       <InstallPWA />
-      <VersionMonitor />
       <Toaster position="top-center" duration={3000} />
       <BrowserRouter>
         <AuthProvider>

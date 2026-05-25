@@ -123,7 +123,7 @@ export default function FuncionarioDetalhePage() {
         </div>
 
         <div className="flex gap-2">
-          <PagarSalarioDialog funcionarioId={func.id} salarioPadrao={func.salario} onPago={fetchData}>
+          <PagarSalarioDialog funcionarioId={func.id} nomeFuncionario={func.nome} salarioPadrao={func.salario} onPago={fetchData}>
             <Button className="flex-1" disabled={!func.ativo}>
               <DollarSign className="w-4 h-4 mr-1" /> Registrar Pagamento
             </Button>

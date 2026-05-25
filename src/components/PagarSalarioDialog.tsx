@@ -16,12 +16,13 @@ import { format, startOfMonth } from 'date-fns';
 
 interface Props {
   funcionarioId: string;
+  nomeFuncionario: string;
   salarioPadrao: number;
   onPago: () => void;
   children: ReactNode;
 }
 
-export function PagarSalarioDialog({ funcionarioId, salarioPadrao, onPago, children }: Props) {
+export function PagarSalarioDialog({ funcionarioId, nomeFuncionario, salarioPadrao, onPago, children }: Props) {
   const [open, setOpen] = useState(false);
   const [valor, setValor] = useState(String(salarioPadrao));
   const [forma, setForma] = useState('PIX');
@@ -35,17 +36,38 @@ export function PagarSalarioDialog({ funcionarioId, salarioPadrao, onPago, child
     e.preventDefault();
     if (!empresaAtiva) return;
     setLoading(true);
-    const { error } = await supabase.from('pagamentos_funcionarios').insert({
+
+    const valorNum = parseFloat(valor);
+    const usuarioId = usuario?.id ?? null;
+
+    const { error: errPag } = await supabase.from('pagamentos_funcionarios').insert({
       funcionario_id: funcionarioId,
       empresa_id: empresaAtiva.id,
       mes_referencia: `${mesRef}-01`,
-      valor_pago: parseFloat(valor),
+      valor_pago: valorNum,
       forma_pagamento: forma,
       data_pagamento: dataPagamento,
       status: 'Pago',
-      pago_por: usuario?.id ?? null,
+      pago_por: usuarioId,
     });
-    if (error) { toast.error('Erro ao registrar pagamento.'); setLoading(false); return; }
+    if (errPag) { toast.error('Erro ao registrar pagamento.'); setLoading(false); return; }
+
+    // Cria conta paga para controle de caixa
+    await supabase.from('contas_pagar').insert({
+      empresa_id: empresaAtiva.id,
+      descricao: `Salário - ${nomeFuncionario} (${mesRef})`,
+      valor: valorNum,
+      categoria: 'Folha de Pagamento',
+      motivo: 'Pagamento de salário',
+      data_vencimento: dataPagamento,
+      data_pagamento: dataPagamento,
+      forma_pagamento: forma,
+      status: 'Paga',
+      criado_por: usuarioId,
+      aprovado_por: usuarioId,
+      pago_por: usuarioId,
+    });
+
     toast.success('Pagamento registrado!');
     setOpen(false);
     onPago();

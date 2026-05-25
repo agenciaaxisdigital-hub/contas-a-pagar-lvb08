@@ -21,7 +21,7 @@ import { toast } from 'sonner';
 
 const renderDialog = (onPago = vi.fn()) =>
   render(
-    <PagarSalarioDialog funcionarioId="f1" salarioPadrao={3500} onPago={onPago}>
+    <PagarSalarioDialog funcionarioId="f1" nomeFuncionario="João Silva" salarioPadrao={3500} onPago={onPago}>
       <button>Pagar</button>
     </PagarSalarioDialog>,
   );
@@ -71,6 +71,26 @@ describe('PagarSalarioDialog', () => {
       }));
       expect(toast.success).toHaveBeenCalled();
       expect(onPago).toHaveBeenCalled();
+    });
+  });
+
+  it('cria conta paga no contas_pagar ao registrar salário', async () => {
+    const onPago = vi.fn();
+    renderDialog(onPago);
+    fireEvent.click(screen.getByText('Pagar'));
+    await waitFor(() => screen.getByText('Confirmar Pagamento'));
+    fireEvent.click(screen.getByText('Confirmar Pagamento'));
+    await waitFor(() => {
+      // mockInsert chamado 2x: pagamentos_funcionarios + contas_pagar
+      expect(mockInsert).toHaveBeenCalledTimes(2);
+      expect(mockInsert).toHaveBeenCalledWith(expect.objectContaining({
+        empresa_id: 'e1',
+        descricao: expect.stringContaining('João Silva'),
+        valor: 3500,
+        categoria: 'Folha de Pagamento',
+        status: 'Paga',
+        forma_pagamento: 'PIX',
+      }));
     });
   });
 
