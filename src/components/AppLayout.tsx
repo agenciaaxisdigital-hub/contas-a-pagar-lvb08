@@ -52,7 +52,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
             </div>
             <div>
               <h1 className="text-sm font-bold text-foreground leading-tight">
-                {empresaAtiva?.nome ?? 'Contas a Pagar'}
+                {empresaAtiva?.nome ?? 'Agência Axis'}
               </h1>
               <button
                 onClick={() => navigate('/empresas')}
