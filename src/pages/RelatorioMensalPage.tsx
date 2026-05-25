@@ -209,7 +209,7 @@ export default function RelatorioMensalPage() {
     <div class="logo">FS</div>
     <div>
       <div class="title">Relatório Mensal — ${mesLabel.charAt(0).toUpperCase() + mesLabel.slice(1)}</div>
-      <div class="subtitle">Dra. Fernanda Sarelli · Contas a Pagar · Gerado em ${format(new Date(), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}</div>
+      <div class="subtitle">Agência Axis Digital · Contas a Pagar · Gerado em ${format(new Date(), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}</div>
     </div>
   </div>
 
@@ -249,7 +249,7 @@ export default function RelatorioMensalPage() {
   </table>
 
   <div class="footer">
-    Contas a Pagar · Dra. Fernanda Sarelli · ${contas.length} conta${contas.length !== 1 ? 's' : ''} · Total ${fmt(totalGeral)}
+    Contas a Pagar · Agência Axis Digital · ${contas.length} conta${contas.length !== 1 ? 's' : ''} · Total ${fmt(totalGeral)}
   </div>
   <script>window.onload = () => window.print();</script>
 </body>

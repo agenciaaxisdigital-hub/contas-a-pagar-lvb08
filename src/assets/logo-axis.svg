@@ -1,0 +1,49 @@
+<svg viewBox="0 0 220 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Outer A frame -->
+  <path d="M110 18 L198 178 L158 178 L110 90 L62 178 L22 178 Z"
+        fill="none" stroke="#8A8F98" stroke-width="10" stroke-linejoin="round" stroke-linecap="round"/>
+
+  <!-- Inner A (parallel, inset) -->
+  <path d="M110 44 L172 164 L148 164 L110 112 L72 164 L48 164 Z"
+        fill="none" stroke="#6B7280" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/>
+
+  <!-- Crossbar outer -->
+  <line x1="56" y1="134" x2="164" y2="134" stroke="#8A8F98" stroke-width="8" stroke-linecap="round"/>
+  <!-- Crossbar inner -->
+  <line x1="74" y1="134" x2="146" y2="134" stroke="#5A5F6B" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- Circuit traces left (3 horizontal lines) -->
+  <line x1="40" y1="152" x2="4" y2="152" stroke="#8A8F98" stroke-width="4" stroke-linecap="round"/>
+  <line x1="32" y1="164" x2="4" y2="164" stroke="#7C8190" stroke-width="4" stroke-linecap="round"/>
+  <line x1="48" y1="140" x2="4" y2="140" stroke="#7C8190" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- Circuit traces right (2 lines) -->
+  <line x1="172" y1="156" x2="216" y2="156" stroke="#8A8F98" stroke-width="4" stroke-linecap="round"/>
+  <line x1="180" y1="168" x2="216" y2="168" stroke="#7C8190" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- Nodes — left traces -->
+  <circle cx="4" cy="152" r="5" fill="#6B7280"/>
+  <circle cx="4" cy="164" r="5" fill="#6B7280"/>
+  <circle cx="4" cy="140" r="5" fill="#6B7280"/>
+
+  <!-- Nodes — right traces -->
+  <circle cx="216" cy="156" r="5" fill="#6B7280"/>
+  <circle cx="216" cy="168" r="5" fill="#6B7280"/>
+
+  <!-- Nodes — crossbar ends -->
+  <circle cx="56" cy="134" r="4" fill="#8A8F98"/>
+  <circle cx="164" cy="134" r="4" fill="#8A8F98"/>
+
+  <!-- Node — top of outer A -->
+  <circle cx="110" cy="18" r="5" fill="#9CA3AF"/>
+  <!-- Node — top of inner A -->
+  <circle cx="110" cy="44" r="4" fill="#8A8F98"/>
+
+  <!-- Nodes — bottom corners outer -->
+  <circle cx="22" cy="178" r="5" fill="#9CA3AF"/>
+  <circle cx="198" cy="178" r="5" fill="#9CA3AF"/>
+
+  <!-- Nodes — bottom corners inner -->
+  <circle cx="48" cy="164" r="4" fill="#6B7280"/>
+  <circle cx="172" cy="164" r="4" fill="#6B7280"/>
+</svg>

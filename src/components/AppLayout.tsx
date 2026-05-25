@@ -40,12 +40,12 @@ export default function AppLayout({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-[100dvh] bg-background flex flex-col" style={{ paddingBottom: "calc(64px + env(safe-area-inset-bottom, 0px))" }}>
-      <div className="bg-gradient-to-r from-primary via-rose-400 to-pink-300 h-1 sticky top-0 z-50" />
+      <div className="h-1 sticky top-0 z-50" style={{ background: 'linear-gradient(90deg, #3A3D42 0%, #6B7280 60%, #9CA3AF 100%)' }} />
 
       <header className="sticky top-1 z-40 bg-card border-b border-border px-4 py-3 shadow-sm">
         <div className="max-w-2xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-rose-400 flex items-center justify-center shadow-md shrink-0">
+            <div className="w-10 h-10 rounded-full flex items-center justify-center shadow-md shrink-0" style={{ background: 'linear-gradient(135deg, #3A3D42 0%, #6B7280 100%)' }}>
               <span className="text-xs font-black text-primary-foreground">
                 {empresaAtiva?.nome?.[0]?.toUpperCase() ?? 'FS'}
               </span>
