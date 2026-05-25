@@ -42,41 +42,42 @@ export default function CompanySelectorPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full max-w-3xl">
         {empresas.map((empresa) => {
           const bg = empresa.cor_fundo ?? '#F3F4F6';
-          const isDark = bg !== '#FFFFFF' && bg !== '#ffffff' && bg !== '#F3F4F6';
           return (
             <button
               key={empresa.id}
               onClick={() => handleEnter(empresa)}
-              className="border rounded-xl overflow-hidden flex flex-col items-center gap-3 hover:shadow-md hover:border-primary/40 transition-all text-left group bg-card"
+              className="border rounded-2xl overflow-hidden flex flex-col hover:shadow-lg hover:border-primary/40 hover:scale-[1.02] transition-all duration-200 text-left group bg-card"
             >
-              {/* Logo area — same background as the logo */}
+              {/* Logo area */}
               <div
-                className="w-full flex items-center justify-center p-5"
-                style={{ backgroundColor: bg }}
+                className="w-full flex items-center justify-center"
+                style={{ backgroundColor: bg, minHeight: '140px', padding: '28px 24px' }}
               >
                 {empresa.logo_url ? (
                   <img
                     src={empresa.logo_url}
                     alt={empresa.nome}
-                    className="h-16 w-auto max-w-[160px] object-contain"
+                    style={{ maxHeight: '90px', width: 'auto', maxWidth: '100%', objectFit: 'contain' }}
                   />
                 ) : (
-                  <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
-                    <span className="text-2xl font-bold text-primary">
+                  <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+                    <span className="text-3xl font-bold text-primary">
                       {empresa.nome[0].toUpperCase()}
                     </span>
                   </div>
                 )}
               </div>
               {/* Info area */}
-              <div className="text-center px-4 pb-4">
-                <p className="font-semibold text-foreground">{empresa.nome}</p>
-                {empresa.cnpj && (
-                  <p className="text-xs text-muted-foreground mt-0.5">{empresa.cnpj}</p>
-                )}
-                <Button size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity mt-2">
-                  Entrar
-                </Button>
+              <div className="flex items-center justify-between px-4 py-3 gap-2">
+                <div className="min-w-0">
+                  <p className="font-semibold text-sm text-foreground truncate">{empresa.nome}</p>
+                  {empresa.cnpj && (
+                    <p className="text-xs text-muted-foreground mt-0.5 truncate">{empresa.cnpj}</p>
+                  )}
+                </div>
+                <span className="text-xs font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+                  Entrar →
+                </span>
               </div>
             </button>
           );
