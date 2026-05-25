@@ -42,7 +42,28 @@ export function EmpresaProvider({ children }: { children: ReactNode }) {
     setLoading(false);
   };
 
-  useEffect(() => { fetchEmpresas(); }, []);
+  useEffect(() => {
+    // Wait for auth session before fetching — prevents RLS race condition
+    // where the query fires as anon before the session token is restored.
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        fetchEmpresas();
+      } else {
+        setLoading(false);
+      }
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+        fetchEmpresas();
+      } else if (event === 'SIGNED_OUT') {
+        setEmpresas([]);
+        setLoading(false);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const setEmpresaAtiva = (empresa: Empresa) => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(empresa));
