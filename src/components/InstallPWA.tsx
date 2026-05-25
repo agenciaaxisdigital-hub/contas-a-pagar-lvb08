@@ -1,7 +1,7 @@
 ﻿import { useState, useEffect } from 'react';
-import { Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import logoAxis from '@/assets/logo-axis.png';
 
 export default function InstallPWA() {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
@@ -57,7 +57,7 @@ export default function InstallPWA() {
       size="sm"
       className="fixed top-4 right-4 z-50 bg-background/80 backdrop-blur-sm border-primary/20 hover:bg-primary/10 transition-all flex items-center gap-2 shadow-lg"
     >
-      <Download className="w-4 h-4 text-primary animate-bounce" />
+      <img src={logoAxis} alt="Axis" className="w-5 h-5 rounded-full object-cover" />
       <span className="hidden sm:inline font-medium text-sm">Instalar App</span>
     </Button>
   );
