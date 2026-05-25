@@ -18,11 +18,12 @@ const fmt = (v: number) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);
 
 const fmtData = (d: string | null | undefined) => {
-  if (!d) return '_____ / _____ / _________';
-  try {
-    const dt = d.includes('T') ? new Date(d) : new Date(d + 'T00:00:00');
-    return format(dt, 'dd/MM/yyyy', { locale: ptBR });
-  } catch { return d; }
+  // Se não tem data de pagamento, usa hoje (recibo gerado antes do pagamento)
+  const dt = d
+    ? (d.includes('T') ? new Date(d) : new Date(d + 'T00:00:00'))
+    : new Date();
+  try { return format(dt, 'dd/MM/yyyy', { locale: ptBR }); }
+  catch { return d ?? format(new Date(), 'dd/MM/yyyy', { locale: ptBR }); }
 };
 
 // Valor por extenso — suporte até 999.999
@@ -71,6 +72,7 @@ function valorExtenso(valor: number): string {
 
 export function gerarReciboAssinatura(data: ReciboData) {
   const agora = format(new Date(), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR });
+  const dataRecibo = fmtData(data.data_pagamento); // hoje se ainda não pago
   const extenso = valorExtenso(data.valor);
   const empresaNome = data.empresa_nome ?? 'Agência Axis Digital';
 
@@ -168,7 +170,7 @@ export function gerarReciboAssinatura(data: ReciboData) {
       </div>` : ''}
       <div class="detail-row">
         <span class="detail-label">Data do pagamento</span>
-        <span class="detail-value">${fmtData(data.data_pagamento)}</span>
+        <span class="detail-value">${dataRecibo}</span>
       </div>
       ${data.forma_pagamento ? `
       <div class="detail-row">
@@ -198,11 +200,11 @@ export function gerarReciboAssinatura(data: ReciboData) {
 
     <!-- Declaração de recebimento -->
     <div class="declaracao">
-      Declaro que recebi de <strong>${empresaNome}</strong> a quantia de
-      <strong>${fmt(data.valor)}</strong> (${extenso}),
-      referente a <strong>${data.motivo}</strong>${data.descricao !== data.motivo ? ` — ${data.descricao}` : ''},
-      ${data.forma_pagamento ? `mediante pagamento via <strong>${data.forma_pagamento}</strong>,` : ''}
-      dando plena e total quitação pelo valor acima descrito.
+      Recebi de <strong>${empresaNome}</strong>, na data de <strong>${dataRecibo}</strong>,
+      a quantia de <strong>${fmt(data.valor)}</strong>
+      (${extenso}), referente a <strong>${data.descricao}</strong>${data.motivo && data.motivo !== data.descricao ? ` — ${data.motivo}` : ''},
+      ${data.forma_pagamento ? `pago via <strong>${data.forma_pagamento}</strong>${data.chave_pix ? ` (${data.chave_pix})` : ''},` : ''}
+      dando plena e total quitação pelo valor acima recebido.
     </div>
 
     <!-- Campo de assinatura do recebedor -->
