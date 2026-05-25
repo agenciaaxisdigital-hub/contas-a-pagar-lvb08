@@ -6,6 +6,7 @@ export interface Empresa {
   nome: string;
   cnpj: string | null;
   logo_url: string | null;
+  cor_fundo: string | null;
   criado_em: string;
 }
 

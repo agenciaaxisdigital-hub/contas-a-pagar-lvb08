@@ -91,7 +91,8 @@ const setupFrom = (status: string) => {
     insert: vi.fn(() => Promise.resolve({ data: null, error: null })),
   };
   const usuariosChain: any = {
-    select: vi.fn(() => Promise.resolve({ data: [{ id: 'usr-1', nome: 'João' }, { id: 'usr-admin', nome: 'Admin' }], error: null })),
+    select: vi.fn(() => usuariosChain),
+    order: vi.fn(() => Promise.resolve({ data: [{ id: 'usr-1', nome: 'João' }, { id: 'usr-admin', nome: 'Admin' }], error: null })),
   };
   mockFrom.mockImplementation((table: string) => {
     if (table === 'contas_pagar') return contaChain;

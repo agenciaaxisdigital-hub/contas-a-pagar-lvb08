@@ -18,9 +18,29 @@ vi.mock('react-router-dom', async (importOriginal) => {
 const mockUseAuth = vi.fn();
 vi.mock('@/hooks/useAuth', () => ({ useAuth: () => mockUseAuth() }));
 
+vi.mock('@/lib/offlineStore', () => ({
+  fetchAndCacheContas: vi.fn().mockResolvedValue([]),
+  getLocalContas: vi.fn().mockResolvedValue([]),
+  hasLocalData: vi.fn().mockResolvedValue(false),
+  getMonthKey: vi.fn().mockReturnValue('2026-05'),
+  addSyncOperation: vi.fn(),
+}));
+vi.mock('@/lib/offlineFallback', () => ({
+  getPendingCount: vi.fn().mockResolvedValue(0),
+}));
+vi.mock('@/lib/dexieDb', () => ({ db: {} }));
+
 const mockFrom = vi.fn();
 vi.mock('@/integrations/supabase/client', () => ({
-  supabase: { from: (...args: any[]) => mockFrom(...args) },
+  supabase: {
+    from: (...args: any[]) => mockFrom(...args),
+    channel: () => ({
+      on: () => ({
+        subscribe: () => ({ unsubscribe: vi.fn() }),
+      }),
+    }),
+    removeChannel: vi.fn(),
+  },
 }));
 vi.mock('@/contexts/EmpresaContext', () => ({
   useEmpresa: () => ({
@@ -95,7 +115,10 @@ describe('DashboardPage', () => {
   it('renderiza seletor de mês', async () => {
     mockUseAuth.mockReturnValue(adminUser);
     renderDashboard();
-    await waitFor(() => expect(screen.getByText(/abril 2026/i)).toBeInTheDocument());
+    const months = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+    const now = new Date();
+    const label = `${months[now.getMonth()]} ${now.getFullYear()}`;
+    await waitFor(() => expect(screen.getByText(new RegExp(label, 'i'))).toBeInTheDocument());
   });
 
   it('estado vazio exibe mensagem', async () => {
