@@ -301,6 +301,16 @@ export default function ContaDetalhePage() {
     });
   };
 
+  const handleDeletar = async () => {
+    if (!conta || !window.confirm(`Excluir "${conta.descricao}"? Esta ação não pode ser desfeita.`)) return;
+    setActionLoading(true);
+    const { error } = await supabase.from('contas_pagar').delete().eq('id', conta.id);
+    setActionLoading(false);
+    if (error) { toast.error('Erro ao excluir conta'); return; }
+    toast.success('Conta excluída');
+    navigate('/');
+  };
+
   const clearViewerBlob = () => {
     if (viewerBlobRef.current) {
       URL.revokeObjectURL(viewerBlobRef.current);
@@ -729,14 +739,6 @@ export default function ContaDetalhePage() {
           </div>
         )}
 
-        {/* Recibo c/ Assinatura — disponível em qualquer status para imprimir, assinar e subir como comprovante */}
-        <button
-          onClick={handleGerarRecibo}
-          className="w-full h-12 rounded-xl border border-primary/30 bg-primary/5 text-primary flex items-center justify-center gap-2 text-sm font-medium shadow-sm active:scale-[0.98] transition-transform hover:bg-primary/10"
-        >
-          <PenLine size={16} /> Gerar Recibo para Assinatura
-        </button>
-
         {/* PDF resumo — só quando já paga/aprovada */}
         {(conta.status === 'Paga' || conta.status === 'Aprovada') && (
           <button
@@ -882,6 +884,14 @@ export default function ContaDetalhePage() {
               </div>
             )}
 
+            {/* Recibo para assinar antes de pagar */}
+            <button
+              onClick={handleGerarRecibo}
+              className="w-full h-12 rounded-xl border border-primary/30 bg-primary/5 text-primary flex items-center justify-center gap-2 text-sm font-medium shadow-sm active:scale-[0.98] transition-transform hover:bg-primary/10"
+            >
+              <PenLine size={16} /> Gerar Recibo para Assinatura
+            </button>
+
             <Button
               onClick={handleConfirmarPagamento}
               disabled={actionLoading || !formaPagamento}
@@ -897,6 +907,16 @@ export default function ContaDetalhePage() {
               className="w-full h-11 text-destructive border-destructive/30 rounded-xl text-sm"
             >
               <X size={14} className="mr-2" /> Cancelar conta
+            </Button>
+
+            {/* Excluir — remove permanentemente do banco */}
+            <Button
+              variant="ghost"
+              onClick={handleDeletar}
+              disabled={actionLoading}
+              className="w-full h-10 text-destructive/70 hover:text-destructive hover:bg-destructive/5 rounded-xl text-xs"
+            >
+              Excluir conta permanentemente
             </Button>
           </div>
         )}
