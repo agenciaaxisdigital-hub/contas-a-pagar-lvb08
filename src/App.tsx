@@ -15,6 +15,9 @@ import GerenciarUsuarios from "./pages/GerenciarUsuarios";
 import RelatorioMensalPage from "./pages/RelatorioMensalPage";
 import CompanySelectorPage from "./pages/CompanySelectorPage";
 import NotFound from "./pages/NotFound";
+import FuncionariosPage from "./pages/rh/FuncionariosPage";
+import NovoFuncionarioPage from "./pages/rh/NovoFuncionarioPage";
+import FuncionarioDetalhePage from "./pages/rh/FuncionarioDetalhePage";
 import VersionMonitor from "./components/VersionMonitor";
 import InstallPWA from "./components/InstallPWA";
 import { useOfflineSync } from "./hooks/useOfflineSync";
@@ -88,6 +91,11 @@ const App = () => (
               <Route path="/nova-conta" element={<EmpresaRoute><NovaContaPage /></EmpresaRoute>} />
               <Route path="/conta/:id" element={<EmpresaRoute><ContaDetalhePage /></EmpresaRoute>} />
               <Route path="/perfil" element={<EmpresaRoute><PerfilPage /></EmpresaRoute>} />
+
+              {/* RH */}
+              <Route path="/rh/funcionarios" element={<EmpresaRoute><FuncionariosPage /></EmpresaRoute>} />
+              <Route path="/rh/funcionarios/novo" element={<EmpresaRoute><NovoFuncionarioPage /></EmpresaRoute>} />
+              <Route path="/rh/funcionarios/:id" element={<EmpresaRoute><FuncionarioDetalhePage /></EmpresaRoute>} />
 
               {/* Admin only */}
               <Route path="/relatorios" element={<AdminRoute><RelatoriosPage /></AdminRoute>} />
