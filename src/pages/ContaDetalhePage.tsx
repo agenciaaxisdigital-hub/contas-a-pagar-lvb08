@@ -729,22 +729,22 @@ export default function ContaDetalhePage() {
           </div>
         )}
 
-        {/* PDF + Recibo */}
+        {/* Recibo c/ Assinatura — disponível em qualquer status para imprimir, assinar e subir como comprovante */}
+        <button
+          onClick={handleGerarRecibo}
+          className="w-full h-12 rounded-xl border border-primary/30 bg-primary/5 text-primary flex items-center justify-center gap-2 text-sm font-medium shadow-sm active:scale-[0.98] transition-transform hover:bg-primary/10"
+        >
+          <PenLine size={16} /> Gerar Recibo para Assinatura
+        </button>
+
+        {/* PDF resumo — só quando já paga/aprovada */}
         {(conta.status === 'Paga' || conta.status === 'Aprovada') && (
-          <div className="flex gap-2">
-            <button
-              onClick={handleGerarPdf}
-              className="flex-1 h-12 rounded-xl border border-border bg-card flex items-center justify-center gap-2 text-sm font-medium shadow-sm active:scale-[0.98] transition-transform"
-            >
-              <Download size={16} /> PDF
-            </button>
-            <button
-              onClick={handleGerarRecibo}
-              className="flex-1 h-12 rounded-xl border border-primary/30 bg-primary/5 text-primary flex items-center justify-center gap-2 text-sm font-medium shadow-sm active:scale-[0.98] transition-transform hover:bg-primary/10"
-            >
-              <PenLine size={16} /> Recibo c/ Assinatura
-            </button>
-          </div>
+          <button
+            onClick={handleGerarPdf}
+            className="w-full h-12 rounded-xl border border-border bg-card flex items-center justify-center gap-2 text-sm font-medium shadow-sm active:scale-[0.98] transition-transform"
+          >
+            <Download size={16} /> Baixar documento (PDF)
+          </button>
         )}
 
         {/* ═══════ SEÇÃO 2: REGISTRAR PAGAMENTO (admin) ═══════ */}
