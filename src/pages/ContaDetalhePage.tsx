@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { useEmpresa } from '@/contexts/EmpresaContext';
 import { toast } from 'sonner';
 import {
   ArrowLeft, Check, X, CreditCard, Paperclip, History,
@@ -55,6 +56,7 @@ export default function ContaDetalhePage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { usuario, isAdmin } = useAuth();
+  const { empresaAtiva } = useEmpresa();
   const [conta, setConta] = useState<any>(null);
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [loading, setLoading] = useState(true);
@@ -186,6 +188,7 @@ export default function ContaDetalhePage() {
         data_vencimento: editDataVencimento,
         motivo: editMotivo.trim(),
         categoria: editCategoria.trim() || null,
+        empresa_id: empresaAtiva?.id ?? null,
         atualizado_em: new Date().toISOString(),
       })
       .eq('id', conta.id);

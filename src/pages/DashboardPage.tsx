@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { useEmpresa } from '@/contexts/EmpresaContext';
 import {
   Plus, AlertTriangle, ChevronLeft, ChevronRight,
   Clock, CheckCircle2, RefreshCw, ChevronRight as Arrow, Search, X, WifiOff, CloudOff
@@ -24,6 +25,7 @@ type Aba = 'pendente' | 'pago' | 'vencida';
 
 export default function DashboardPage() {
   const { usuario, isAdmin } = useAuth();
+  const { empresaAtiva } = useEmpresa();
   const navigate = useNavigate();
   const [contas, setContas] = useState<LocalConta[]>([]);
   const [loading, setLoading] = useState(true);
@@ -70,12 +72,12 @@ export default function DashboardPage() {
     try {
       if (navigator.onLine) {
         // Online: fetch from Supabase and cache
-        const data = await fetchAndCacheContas(mesAtual);
+        const data = await fetchAndCacheContas(mesAtual, empresaAtiva?.id ?? '');
         setContas(data);
         console.log(`[PERF] Dashboard fetch (online): ${Math.round(performance.now() - fetchStart)}ms, ${data.length} contas`);
       } else {
         // Offline: load from IndexedDB
-        const data = await getLocalContas(mesAtual);
+        const data = await getLocalContas(mesAtual, empresaAtiva?.id);
         setContas(data);
         console.log(`[PERF] Dashboard fetch (offline): ${Math.round(performance.now() - fetchStart)}ms, ${data.length} contas`);
       }
@@ -83,7 +85,7 @@ export default function DashboardPage() {
       console.warn('[DASH] Fetch error, trying local cache:', err);
       // Fallback to local cache on any error
       try {
-        const data = await getLocalContas(mesAtual);
+        const data = await getLocalContas(mesAtual, empresaAtiva?.id);
         setContas(data);
       } catch {
         setContas([]);

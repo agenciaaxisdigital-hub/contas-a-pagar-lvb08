@@ -52,6 +52,14 @@ vi.mock('@/lib/offlineStore', () => ({
 vi.mock('@/lib/offlineFallback', () => ({
   enqueueOperation: (...a: any[]) => mockEnqueueOperation(...a),
 }));
+vi.mock('@/contexts/EmpresaContext', () => ({
+  useEmpresa: () => ({
+    empresaAtiva: { id: 'empresa-1', nome: 'Empresa Teste' },
+    empresas: [],
+    loading: false,
+  }),
+  EmpresaProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+}));
 // ---------------------------------------------------------------------------
 
 import NovaContaPage from '@/pages/NovaContaPage';

@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { useEmpresa } from '@/contexts/EmpresaContext';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
@@ -29,6 +30,7 @@ const parseBRL = (s: string) =>
 
 export default function NovaContaPage() {
   const { usuario } = useAuth();
+  const { empresaAtiva } = useEmpresa();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
@@ -124,6 +126,7 @@ export default function NovaContaPage() {
       recorrente,
       dia_vencimento_recorrente: recorrente && diaRecorrente ? parseInt(diaRecorrente) : null,
       chave_pix: chavePix.trim() || null,
+      empresa_id: empresaAtiva?.id ?? null,
       criado_em: now,
       atualizado_em: now,
     };

@@ -22,6 +22,14 @@ const mockFrom = vi.fn();
 vi.mock('@/integrations/supabase/client', () => ({
   supabase: { from: (...args: any[]) => mockFrom(...args) },
 }));
+vi.mock('@/contexts/EmpresaContext', () => ({
+  useEmpresa: () => ({
+    empresaAtiva: { id: 'empresa-1', nome: 'Empresa Teste' },
+    empresas: [],
+    loading: false,
+  }),
+  EmpresaProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+}));
 // ---------------------------------------------------------------------------
 
 import DashboardPage from '@/pages/DashboardPage';
