@@ -46,14 +46,25 @@ src/
     offlineStore.ts   # fetchAndCacheContas, addSyncOperation, getLocalContas
     gerarPdfConta.ts  # export PDF (jsPDF)
     utils.ts      # cn(), formatBRL, formatDate
+  contexts/
+    EmpresaContext.tsx  # empresa ativa + lista de empresas
+  pages/rh/
+    FuncionariosPage.tsx, NovoFuncionarioPage.tsx, FuncionarioDetalhePage.tsx
+  components/
+    PagarSalarioDialog.tsx, NovaEmpresaDialog.tsx
 supabase/migrations/  # 3 arquivos SQL (schema + seed)
+supabase/functions/
+  criar-contas-recorrentes/  # Edge Function mensal
 ```
 
 ## Schema Principal
+- `empresas` — id, nome, cnpj, logo_url
 - `usuarios` — id, auth_user_id, nome, tipo (admin|user)
-- `fornecedores` — CNPJ, banco, PIX
-- `contas_pagar` — valor, datas, status (Lancada|Paga|Recorrente), forma_pagamento, comprovante_url, recorrente, dia_vencimento_recorrente
+- `fornecedores` — empresa_id, CNPJ, banco, PIX
+- `contas_pagar` — empresa_id, valor, datas, status (Lancada|Paga|Recorrente), forma_pagamento, comprovante_url, recorrente, dia_vencimento_recorrente
 - `logs_contas` — audit trail de mudanças de status
+- `funcionarios` — empresa_id, nome, cpf, cargo, salario, data_admissao, pix, contrato_url, ativo
+- `pagamentos_funcionarios` — funcionario_id, empresa_id, mes_referencia, valor_pago, forma_pagamento, status
 
 ## Padrões Obrigatórios
 - UI: `cn()` para classes condicionais, nunca inline styles
@@ -88,11 +99,6 @@ Wrappers: `<ProtectedRoute>`, `<AdminRoute>`, `<PublicRoute>`
 ## Próximas Melhorias (Prioridade)
 
 ### Alta
-1. **Recorrência automática** — criar cron job (Supabase Edge Function + pg_cron) para gerar contas_pagar mensais a partir de registros `recorrente=true`
-2. **Real-time** — Supabase Realtime subscriptions no Dashboard para atualizar sem reload quando outro usuário muda status
-3. **Testes E2E** — Playwright não coberto; fluxos críticos: login → criar conta → marcar paga → PDF
-
-### Média
 4. **Strict TypeScript** — ativar `strict: true` e eliminar `any` implícitos (melhor DX e menos bugs)
 5. **Bundle analysis** — `vite-bundle-visualizer`; react-pdf + Three.js são pesados, avaliar lazy/dynamic imports
 6. **Aprovação multi-step** — workflow visual claro: Lancada → Aprovada (admin) → Paga; hoje aprovado_por existe no schema mas sem UI completa
