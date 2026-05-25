@@ -1,7 +1,9 @@
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/hooks/useAuth';
 import { useEmpresa } from '@/contexts/EmpresaContext';
+import { supabase } from '@/integrations/supabase/client';
 import {
   Plus, AlertTriangle, ChevronLeft, ChevronRight,
   Clock, CheckCircle2, RefreshCw, ChevronRight as Arrow, Search, X, WifiOff, CloudOff
@@ -35,6 +37,8 @@ export default function DashboardPage() {
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
   const [pendingSync, setPendingSync] = useState(0);
 
+  const queryClient = useQueryClient();
+
   useNotifications(usuario?.id);
 
   // Track online/offline status
@@ -55,6 +59,28 @@ export default function DashboardPage() {
 
   useEffect(() => { fetchContas(); }, [usuario, mesAtual]);
   useEffect(() => { setBusca(''); }, [aba, mesAtual]);
+
+  useEffect(() => {
+    if (!empresaAtiva) return;
+
+    const channel = supabase
+      .channel(`contas_realtime_${empresaAtiva.id}`)
+      .on(
+        'postgres_changes' as any,
+        {
+          event: '*',
+          schema: 'public',
+          table: 'contas_pagar',
+          filter: `empresa_id=eq.${empresaAtiva.id}`,
+        },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ['contas'] });
+        }
+      )
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [empresaAtiva?.id, queryClient]);
 
   // Check pending sync count periodically
   useEffect(() => {
